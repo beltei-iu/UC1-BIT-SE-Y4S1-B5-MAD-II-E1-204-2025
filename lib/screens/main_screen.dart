@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mad_2_204/screens/cart_screen.dart';
 import 'package:mad_2_204/screens/favorite_screen.dart';
 import 'package:mad_2_204/screens/home_screen.dart';
 import 'package:mad_2_204/screens/more_screen.dart';
-import 'package:mad_2_204/screens/notification_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> screenList = [
     HomeScreen(),
     FavoriteScreen(),
-    NotificationScreen(),
+    CartScreen(),
     MoreScreen(),
   ];
 
@@ -34,10 +34,7 @@ class _MainScreenState extends State<MainScreen> {
     final items = [
       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorite'),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.notifications),
-        label: 'Notification',
-      ),
+      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
       BottomNavigationBarItem(icon: Icon(Icons.more_vert), label: 'More'),
     ];
     return BottomNavigationBar(

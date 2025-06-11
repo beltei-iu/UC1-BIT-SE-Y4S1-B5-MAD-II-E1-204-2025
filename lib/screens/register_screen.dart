@@ -159,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
         },
         child: Text(
-          "Login",
+          "Register",
           style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),

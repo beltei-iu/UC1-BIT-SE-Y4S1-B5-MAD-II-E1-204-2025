@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         prefix: Icon(Icons.lock_person),
         suffix:
-            _isValidPass
+            _obscureText
                 ? GestureDetector(
                   onTap: () {
                     setState(() {
