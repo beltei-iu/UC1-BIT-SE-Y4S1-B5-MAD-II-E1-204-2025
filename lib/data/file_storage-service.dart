@@ -17,7 +17,6 @@ class FileStorageService {
     if (file.exists() == false) {
       file.create();
     }
-
     // Create payload
     // productId=1,price=2000,qty=2,discount=10
     String payload =

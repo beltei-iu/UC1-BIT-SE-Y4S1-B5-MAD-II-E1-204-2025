@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mad_2_204/data/file_storage-service.dart';
+import 'package:mad_2_204/models/product.dart';
+import 'package:mad_2_204/services/product_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -16,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String userName = 'Guest';
   int _totalOrderProduct = 0;
+  List<Product> _products = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -25,10 +29,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadOrderProduct() async {
-    List<String> productsOrder = await FileStorageService.getOrderProducts();
+    // Load from File
+    // List<String> productsOrder = await FileStorageService.getOrderProducts();
+    // setState(() {
+    //   _totalOrderProduct = productsOrder.length;
+    // });
+    // Load from DB
+    final productService = ProductService();
     setState(() {
-      _totalOrderProduct = productsOrder.length;
+      _isLoading = true;
     });
+    List<Product> products = await productService.getProducts();
+    print("Product Items : ${products.length}");
+    await Future.delayed(Duration(seconds: 5));
+    setState(() {
+      _isLoading = false;
+    });
+    setState(() {
+      _products = products;
+    });
+
   }
 
   Future<void> _loadUser() async {
@@ -127,6 +147,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _placeListWidget {
+
+    final cartItems2 = _products.map((e){
+      return SizedBox(
+        height: 150,
+        child: Card(
+          child: Image.asset(
+            "assets/images/img1.png",
+            height: 200,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    }).toList();
+
+
     final cartItems = List.generate(10, (item) {
       return SizedBox(
         height: 150,
@@ -152,13 +187,19 @@ class _HomeScreenState extends State<HomeScreen> {
     // );
 
     // Option 2 : SingleChildScrollView + Row
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: EdgeInsets.only(left: 8, right: 8),
-        child: Row(children: cartItems),
-      ),
+
+    Widget productItems = _isLoading ?
+    Center(child: CircularProgressIndicator(),) :
+    SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: EdgeInsets.only(left: 8, right: 8),
+          child: Row(children: cartItems2),
+        )
     );
+
+    return productItems;
+
   }
 
   Widget get _topProductsWidget {
@@ -178,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _productListWidget {
-    final cartItems = List.generate(10, (item) {
+    List<Widget> cartItems = _products.map((item) {
       return SizedBox(
         height: 150,
         child: Card(
@@ -194,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      FileStorageService.orderProduct(item, 200, 1, 10);
+                      FileStorageService.orderProduct(item.id!, 200, 1, 10);
                       final alert = AlertDialog(
                         title: Icon(
                           Icons.check_circle,
@@ -232,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
-    });
+    }).toList();
 
     //return Row(children: cartItems);
 
