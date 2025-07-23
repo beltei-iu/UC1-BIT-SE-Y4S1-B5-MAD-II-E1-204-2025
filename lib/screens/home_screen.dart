@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mad_2_204/controllers/cart_controller.dart';
 import 'package:mad_2_204/data/file_storage-service.dart';
 import 'package:mad_2_204/models/product.dart';
+import 'package:mad_2_204/provider/cart_provider.dart';
 import 'package:mad_2_204/services/product_service.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -9,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -20,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _totalOrderProduct = 0;
   List<Product> _products = [];
   bool _isLoading = false;
+  final cartController = Get.put(CartController());
 
   @override
   void initState() {
@@ -41,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     List<Product> products = await productService.getProducts();
     print("Product Items : ${products.length}");
-    await Future.delayed(Duration(seconds: 5));
+    //await Future.delayed(Duration(seconds: 5));
     setState(() {
       _isLoading = false;
     });
@@ -68,8 +74,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Provider
+    //final cartProvider = Provider.of<CartProvider>(context, listen:true);
+    // Add to Card
+    // setState(() {
+    //   _totalOrderProduct = cartProvider.cartItems.length;
+    // });
+
+    setState(() {
+      _totalOrderProduct = cartController.cartItems.length;
+    });
+
     return Scaffold(
-      appBar: _appBar,
+      appBar: AppBar(
+        title: Text(
+          'hi'.tr + " $userName",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        elevation: 0.5,
+        actions: [
+          Icon(Icons.search),
+          badges.Badge(
+            position: badges.BadgePosition.topEnd(top: 10, end: 10),
+            badgeStyle: badges.BadgeStyle(badgeColor: Colors.red),
+            badgeContent: Text(
+              "$_totalOrderProduct",
+              style: TextStyle(color: Colors.white),
+            ),
+            child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
+          ),
+
+          Icon(Icons.more_vert),
+        ],
+        backgroundColor: Colors.white,
+      ),
       body: ListView(
         children: [
           _search,
@@ -80,31 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _productListWidget,
         ],
       ),
-    );
-  }
-
-  PreferredSizeWidget get _appBar {
-    return AppBar(
-      title: Text(
-        'Hi, $userName',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-      ),
-      elevation: 0.5,
-      actions: [
-        Icon(Icons.search),
-        badges.Badge(
-          position: badges.BadgePosition.topEnd(top: 10, end: 10),
-          badgeStyle: badges.BadgeStyle(badgeColor: Colors.red),
-          badgeContent: Text(
-            "$_totalOrderProduct",
-            style: TextStyle(color: Colors.white),
-          ),
-          child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
-        ),
-
-        Icon(Icons.more_vert),
-      ],
-      backgroundColor: Colors.white,
     );
   }
 
@@ -148,6 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget get _placeListWidget {
 
+    _products = List.generate(10, (i) => Product()).toList();
+
     final cartItems2 = _products.map((e){
       return SizedBox(
         height: 150,
@@ -161,6 +177,9 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }).toList();
 
+    setState(() {
+      _isLoading = false;
+    });
 
     final cartItems = List.generate(10, (item) {
       return SizedBox(
@@ -219,9 +238,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _productListWidget {
+    _products = List.generate(10, (i) => Product()).toList();
     List<Widget> cartItems = _products.map((item) {
       return SizedBox(
-        height: 150,
+        height: 200,
         child: Card(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -235,7 +255,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      FileStorageService.orderProduct(item.id!, 200, 1, 10);
+
+                      //FileStorageService.orderProduct(item.id!, 200, 1, 10);
+
+                      // GetX
+                      final product = Product(id: item.id!);
+                      cartController.addCart(product);
+
                       final alert = AlertDialog(
                         title: Icon(
                           Icons.check_circle,

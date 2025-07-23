@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:mad_2_204/data/app_shared_pref.dart';
 import 'package:mad_2_204/route/app_route.dart';
+import 'package:mad_2_204/screens/main_screen.dart';
 import 'package:mad_2_204/widgets/logo_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -145,9 +148,13 @@ class _LoginScreenState extends State<LoginScreen> {
             AppSharedPref.login(email, password);
 
             // Ok
-            AppRoute.key.currentState!.pushReplacementNamed(
-              AppRoute.mainScreen,
-            );
+            // AppRoute.key.currentState!.pushReplacementNamed(
+            //   AppRoute.mainScreen,
+            // );
+
+            // Get.off(MainScreen());
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => MainScreen()));
+
           } else {
             // Error
           }

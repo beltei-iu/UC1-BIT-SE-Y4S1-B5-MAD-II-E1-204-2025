@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_204/route/app_route.dart';
+import 'package:mad_2_204/screens/main_screen.dart';
 import 'package:mad_2_204/widgets/logo_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,7 +42,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   backgroundColor: Colors.blueAccent,
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoute.mainScreen);
+                  // Navigator
+                  //Navigator.pushNamed(context, AppRoute.mainScreen);
+
+                  // GetX
+                  Get.off(MainScreen());
                 },
                 child: Text("As Guest", style: TextStyle(color: Colors.white)),
               ),

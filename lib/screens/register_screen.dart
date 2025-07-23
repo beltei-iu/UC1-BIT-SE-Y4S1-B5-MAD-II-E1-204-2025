@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_204/data/app_shared_pref.dart';
 import 'package:mad_2_204/route/app_route.dart';
+import 'package:mad_2_204/screens/main_screen.dart';
 import 'package:mad_2_204/widgets/logo_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -151,9 +153,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             AppSharedPref.register(fullName, email, password);
 
             // Ok
-            AppRoute.key.currentState!.pushReplacementNamed(
-              AppRoute.mainScreen,
-            );
+            // AppRoute.key.currentState!.pushReplacementNamed(
+            //   AppRoute.mainScreen,
+            // );
+
+            Get.off(MainScreen());
           } else {
             // Error
           }

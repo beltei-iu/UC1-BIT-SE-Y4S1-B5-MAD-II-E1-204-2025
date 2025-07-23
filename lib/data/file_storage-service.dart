@@ -1,21 +1,31 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FileStorageService {
+
+  // File Path
+  static String filePath = "assets/data/product.txt";
+
+  static Future<String> _getCurrentPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
   static Future<void> orderProduct(
     int productId,
     double price,
     int qty,
     int discount,
   ) async {
-    // File Path
-    String filePath = "assets/data/product.txt";
+    String path = await _getCurrentPath();
     // Create File
-    File file = File(filePath);
+    File file = await File("$path/$filePath");
     // Check exist file
-    if (file.exists() == false) {
-      file.create();
+    bool isExist = await file.exists();
+    if (!isExist) {
+      file.create(recursive: true);
     }
     // Create payload
     // productId=1,price=2000,qty=2,discount=10
@@ -28,10 +38,14 @@ class FileStorageService {
 
   static Future<List<String>> getOrderProducts() async {
     try {
-      // File Path
-      String filePath = "assets/data/product.txt";
+      String path = await _getCurrentPath();
       // Create File
-      File file = File(filePath);
+      File file = File("$path/$filePath");
+      bool isExist = await file.exists();
+      if(!isExist) {
+        await file.create(recursive: true);
+      }
+
       // Read Line
       List<String> dataLines = await file.readAsLines();
       for (String line in dataLines) {
