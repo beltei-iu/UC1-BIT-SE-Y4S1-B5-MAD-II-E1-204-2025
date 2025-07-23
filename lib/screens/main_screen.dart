@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad_2_204/screens/cart_screen.dart';
 import 'package:mad_2_204/screens/favorite_screen.dart';
 import 'package:mad_2_204/screens/home_screen.dart';
@@ -32,11 +33,10 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget get _bottomNav {
     final items = [
-      BottomNavigationBarItem(
-          icon: Icon(Icons.home), label: 'Home'),
-      BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorite'),
-      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
-      BottomNavigationBarItem(icon: Icon(Icons.more_vert), label: 'More'),
+      BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'.tr),
+      BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'favorite'.tr),
+      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'cart'.tr),
+      BottomNavigationBarItem(icon: Icon(Icons.more_vert), label: 'more'.tr),
     ];
     return BottomNavigationBar(
       backgroundColor: Colors.indigoAccent,

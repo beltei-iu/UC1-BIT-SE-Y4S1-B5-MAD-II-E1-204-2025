@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUser();
+    //_loadUser();
     _loadOrderProduct();
   }
 
@@ -151,10 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Recommended",
+            "recommended".tr,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text("See All", style: TextStyle(fontSize: 16, color: Colors.blue)),
+          Text("seeAll".tr, style: TextStyle(fontSize: 16, color: Colors.blue)),
         ],
       ),
     );

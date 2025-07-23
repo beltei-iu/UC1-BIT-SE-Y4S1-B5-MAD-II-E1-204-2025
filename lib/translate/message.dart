@@ -7,15 +7,27 @@ class Message extends Translations {
   Map<String, Map<String, String>> get keys => {
     "en_US" : {
       "hi":"Hi",
+      'home':"Home",
+      'favorite':"Favorite",
+      'cart':"Cart",
+      'more':"More",
       "language":"Language",
       "khmerLanguage":"Khmer Language",
-      "englishLanguage":"English Language"
+      "englishLanguage":"English Language",
+      "recommended":"Recommended",
+      "seeAll":"See All"
     },
     "km_KH":{
       "hi":"សួស្តី",
+      'home':"ដើម",
+      'favorite':"ចូលចិត្ត",
+      'cart':"កន្រ្តក់",
+      'more':"បន្ថែម",
       "language":"ភាសា",
       "khmerLanguage":"ភាសាខ្មែរ",
-      "englishLanguage":"ភាសាអង់គ្លេស"
+      "englishLanguage":"ភាសាអង់គ្លេស",
+      "recommended":"ណែនាំ",
+      "seeAll":"បន្ថែម"
     }
   };
 
