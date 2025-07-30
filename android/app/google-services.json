@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "1027220963414",
+    "firebase_url": "https://beltei-default-rtdb.firebaseio.com",
+    "project_id": "beltei",
+    "storage_bucket": "beltei.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027220963414:android:859da5c2fde07acc8f7bf7",
+        "android_client_info": {
+          "package_name": "com.example.mad_2_412"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027220963414-5l6ea45r2ee6gma7fi1vais8f4eilkrq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mad_2_412",
+            "certificate_hash": "e835a84ac8464e34a56cc557610593a2b018f36c"
+          }
+        },
+        {
+          "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7zBVe3DmhLcoaTbK0y58wiGXw4LgZuWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1027220963414-01rb7jlh3ghpm7ri00ugi87rjd51s3tj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mad"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027220963414:android:7b81e80cb15263af8f7bf7",
+        "android_client_info": {
+          "package_name": "kh.edu.beltei.mad204"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7zBVe3DmhLcoaTbK0y58wiGXw4LgZuWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1027220963414-01rb7jlh3ghpm7ri00ugi87rjd51s3tj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mad"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027220963414:android:4089c4022b9c6cec8f7bf7",
+        "android_client_info": {
+          "package_name": "kh.edu.beltei.mad211"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027220963414-ns4nnb3j7k3brivlvrla8e00e68cgvfg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kh.edu.beltei.mad211",
+            "certificate_hash": "e835a84ac8464e34a56cc557610593a2b018f36c"
+          }
+        },
+        {
+          "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7zBVe3DmhLcoaTbK0y58wiGXw4LgZuWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027220963414-k0i126g752udt8t51itvedlkj56en4kc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1027220963414-01rb7jlh3ghpm7ri00ugi87rjd51s3tj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mad"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

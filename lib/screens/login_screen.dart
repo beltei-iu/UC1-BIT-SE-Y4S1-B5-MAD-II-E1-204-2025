@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -21,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   _loginButton,
                   SizedBox(height: 16),
                   _socialLogin,
+                  SizedBox(height: 16),
+                  _skip,
                 ],
               ),
             ),
@@ -140,23 +145,11 @@ class _LoginScreenState extends State<LoginScreen> {
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             String email = _emailController.text;
             String password = _passwordController.text;
-            AppSharedPref.login(email, password);
-
-            // Ok
-            // AppRoute.key.currentState!.pushReplacementNamed(
-            //   AppRoute.mainScreen,
-            // );
-
-            // Get.off(MainScreen());
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => MainScreen()));
-
-          } else {
-            // Error
+            _signIn(email, password);
           }
         },
         child: Text(
@@ -180,6 +173,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget get _skip {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: () {
+              Get.off(MainScreen());
+            },
+            child: Text("Skip"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget get _navigateToRegister {
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
@@ -196,5 +206,28 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _signIn(String email, String password) async {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user) {
+            print("UserCredential : $user");
+            // Navigation to MainScreen
+            Get.off(MainScreen());
+          })
+          .catchError((error) {
+            print("catchError : $error");
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("$error")));
+          });
+    } catch (error) {
+      print("catch : $error");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("$error")));
+    }
   }
 }

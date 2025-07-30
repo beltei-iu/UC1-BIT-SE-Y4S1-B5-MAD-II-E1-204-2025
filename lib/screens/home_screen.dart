@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mad_2_204/controllers/cart_controller.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
-
   const HomeScreen({super.key});
 
   @override
@@ -27,11 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
   final cartController = Get.put(CartController());
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
-    //_loadUser();
-    _loadOrderProduct();
+    _loadUser();
   }
 
   Future<void> _loadOrderProduct() async {
@@ -54,27 +55,17 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _products = products;
     });
-
   }
 
   Future<void> _loadUser() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    final fullName = sharedPref.getString('fullName');
-    final email = sharedPref.getString('email');
-    print('Full Name: $fullName'); // Debugging line to check the value
-
-    Future.delayed(const Duration(seconds: 1), () {
-      print('User loaded after delay');
-    });
-
+    final User? user = await _auth.currentUser;
     setState(() {
-      userName = fullName ?? email ?? 'Guest';
+      userName = user!.email?.split("@")[0] ?? 'Guest';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     // Provider
     //final cartProvider = Provider.of<CartProvider>(context, listen:true);
     // Add to Card
@@ -102,7 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
               "$_totalOrderProduct",
               style: TextStyle(color: Colors.white),
             ),
-            child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
           ),
 
           Icon(Icons.more_vert),
@@ -161,21 +155,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget get _placeListWidget {
-
     _products = List.generate(10, (i) => Product()).toList();
 
-    final cartItems2 = _products.map((e){
-      return SizedBox(
-        height: 150,
-        child: Card(
-          child: Image.asset(
-            "assets/images/img1.png",
-            height: 200,
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    }).toList();
+    final cartItems2 =
+        _products.map((e) {
+          return SizedBox(
+            height: 150,
+            child: Card(
+              child: Image.asset(
+                "assets/images/img1.png",
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        }).toList();
 
     setState(() {
       _isLoading = false;
@@ -207,18 +201,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Option 2 : SingleChildScrollView + Row
 
-    Widget productItems = _isLoading ?
-    Center(child: CircularProgressIndicator(),) :
-    SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: EdgeInsets.only(left: 8, right: 8),
-          child: Row(children: cartItems2),
-        )
-    );
+    Widget productItems =
+        _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: EdgeInsets.only(left: 8, right: 8),
+                child: Row(children: cartItems2),
+              ),
+            );
 
     return productItems;
-
   }
 
   Widget get _topProductsWidget {
@@ -239,67 +233,70 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget get _productListWidget {
     _products = List.generate(10, (i) => Product()).toList();
-    List<Widget> cartItems = _products.map((item) {
-      return SizedBox(
-        height: 200,
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/product1.png",
-                height: 100,
-                fit: BoxFit.cover,
-              ),
-              Row(
+    List<Widget> cartItems =
+        _products.map((item) {
+          return SizedBox(
+            height: 200,
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () {
-
-                      //FileStorageService.orderProduct(item.id!, 200, 1, 10);
-
-                      // GetX
-                      final product = Product(id: item.id!);
-                      cartController.addCart(product);
-
-                      final alert = AlertDialog(
-                        title: Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 25,
-                        ),
-                        content: Text("Order Added successfully"),
-                        actions: [
-                          TextButton(
-                            child: Text("Ok"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      );
-                      showDialog(context: context, builder: (context) => alert);
-                    },
-                    child: Text(
-                      "+",
-                      style: TextStyle(fontSize: 18, color: Colors.red),
-                    ),
+                  Image.asset(
+                    "assets/images/product1.png",
+                    height: 100,
+                    fit: BoxFit.cover,
                   ),
-                  Text("1", style: TextStyle(fontSize: 24)),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "-",
-                      style: TextStyle(fontSize: 24, color: Colors.green),
-                    ),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          //FileStorageService.orderProduct(item.id!, 200, 1, 10);
+
+                          // GetX
+                          final product = Product(id: item.id!);
+                          cartController.addCart(product);
+
+                          final alert = AlertDialog(
+                            title: Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 25,
+                            ),
+                            content: Text("Order Added successfully"),
+                            actions: [
+                              TextButton(
+                                child: Text("Ok"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (context) => alert,
+                          );
+                        },
+                        child: Text(
+                          "+",
+                          style: TextStyle(fontSize: 18, color: Colors.red),
+                        ),
+                      ),
+                      Text("1", style: TextStyle(fontSize: 24)),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "-",
+                          style: TextStyle(fontSize: 24, color: Colors.green),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-      );
-    }).toList();
+            ),
+          );
+        }).toList();
 
     //return Row(children: cartItems);
 

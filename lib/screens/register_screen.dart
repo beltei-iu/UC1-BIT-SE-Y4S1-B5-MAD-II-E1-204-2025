@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mad_2_204/data/app_shared_pref.dart';
 import 'package:mad_2_204/route/app_route.dart';
-import 'package:mad_2_204/screens/main_screen.dart';
+import 'package:mad_2_204/screens/login_screen.dart';
 import 'package:mad_2_204/widgets/logo_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,6 +19,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -143,23 +145,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            String fullName = _fullNameController.text;
             String email = _emailController.text;
             String password = _passwordController.text;
-
-            AppSharedPref.register(fullName, email, password);
-
-            // Ok
-            // AppRoute.key.currentState!.pushReplacementNamed(
-            //   AppRoute.mainScreen,
-            // );
-
-            Get.off(MainScreen());
-          } else {
-            // Error
+            _register(email, password);
           }
         },
         child: Text(
@@ -199,5 +189,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _register(String email, String password) async {
+    try {
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((UserCredential user) {
+            print("UserCredential : $user");
+            // Navigation to LoginScreen
+            Get.to(LoginScreen());
+          })
+          .catchError((error) {
+            print("catchError : $error");
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("$error")));
+          });
+    } catch (error) {
+      print("catch : $error");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("$error")));
+    }
   }
 }
