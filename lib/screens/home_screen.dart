@@ -7,7 +7,6 @@ import 'package:mad_2_204/models/product.dart';
 import 'package:mad_2_204/provider/cart_provider.dart';
 import 'package:mad_2_204/services/product_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:badges/badges.dart' as badges;
 
 import 'package:flutter/services.dart';

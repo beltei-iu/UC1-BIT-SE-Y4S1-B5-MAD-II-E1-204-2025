@@ -17,6 +17,7 @@ class MoreScreen extends StatefulWidget {
 class _MoreScreenState extends State<MoreScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String _fullName = "Guest";
+  bool _isNotLogin = true;
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _MoreScreenState extends State<MoreScreen> {
     final User? user = await _auth.currentUser;
     setState(() {
       _fullName = user!.email?.split("@")[0] ?? 'Guest';
+      _isNotLogin = user.email!.isEmpty;
     });
   }
 
@@ -78,29 +80,31 @@ class _MoreScreenState extends State<MoreScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-            child: SizedBox(
-              height: 40,
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigoAccent,
-                ),
-                onPressed: () {
-                  _logout();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Logout", style: TextStyle(color: Colors.white)),
-                    SizedBox(width: 4),
-                    Icon(Icons.logout, color: Colors.white),
-                  ],
+          _isNotLogin
+              ? Container()
+              : Padding(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: SizedBox(
+                  height: 40,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigoAccent,
+                    ),
+                    onPressed: () {
+                      _logout();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Logout", style: TextStyle(color: Colors.white)),
+                        SizedBox(width: 4),
+                        Icon(Icons.logout, color: Colors.white),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
         ],
       ),
     );
