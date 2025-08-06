@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mad_2_204/data/app_shared_pref.dart';
@@ -166,7 +167,17 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/images/facebook.png", width: 30, height: 30),
+          GestureDetector(
+            child: Image.asset(
+              "assets/images/facebook.png",
+              width: 30,
+              height: 30,
+            ),
+            onTap: () {
+              _signInWithFacebook();
+            },
+          ),
+          SizedBox(width: 4),
           Image.asset("assets/images/google.png", width: 30, height: 30),
         ],
       ),
@@ -228,6 +239,26 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("$error")));
+    }
+  }
+
+  Future<void> _signInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login();
+    if (result.status == LoginStatus.success) {
+      // Create a credential from the access token
+      final OAuthCredential credential = FacebookAuthProvider.credential(
+        result.accessToken!.tokenString,
+      );
+      // Once signed in, return the UserCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      print("Data Response : ${result.accessToken!.tokenString}");
+      // Navigation to MainScreen
+      Get.offAll(MainScreen());
+    } else {
+      print(result.message);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("${result.message}")));
     }
   }
 }

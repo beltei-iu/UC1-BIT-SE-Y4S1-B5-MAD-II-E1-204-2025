@@ -28,7 +28,7 @@ class _MoreScreenState extends State<MoreScreen> {
   Future<void> _loadUser() async {
     final User? user = await _auth.currentUser;
     setState(() {
-      _fullName = user!.email?.split("@")[0] ?? 'Guest';
+      _fullName = user!.email?.split("@")[0] ?? user.phoneNumber ?? 'Guest';
       _isNotLogin = user.email!.isEmpty;
     });
   }
