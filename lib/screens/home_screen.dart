@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:mad_2_204/controllers/cart_controller.dart';
 import 'package:mad_2_204/data/file_storage-service.dart';
 import 'package:mad_2_204/models/product.dart';
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadUser();
+    _getFriends();
   }
 
   Future<void> _loadOrderProduct() async {
@@ -61,6 +64,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       userName = user!.email?.split("@")[0] ?? 'Guest';
     });
+  }
+
+  Future<void> _getFriends() async {
+    final token = await FacebookAuth.instance.accessToken;
+    final response = await http.get(
+      Uri.parse(
+        'https://graph.facebook.com/v12.0/me/friends?access_token=${token!.tokenString}',
+      ),
+    );
+    print('Friends: ${response.body}');
   }
 
   @override

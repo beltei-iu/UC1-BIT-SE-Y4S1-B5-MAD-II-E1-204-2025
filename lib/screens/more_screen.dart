@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mad_2_204/data/app_shared_pref.dart';
 import 'package:mad_2_204/route/app_route.dart';
+import 'package:mad_2_204/screens/account_screen.dart';
 import 'package:mad_2_204/screens/language_screen.dart';
 import 'package:mad_2_204/screens/login_screen.dart';
 import 'package:mad_2_204/screens/theme_screen.dart';
+import 'package:mad_2_204/services/facebook_service.dart';
+import 'package:mad_2_204/services/firebase_auth_service.dart';
+import 'package:mad_2_204/services/google_service.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -74,7 +78,9 @@ class _MoreScreenState extends State<MoreScreen> {
                   title: Text("Profile"),
                   subtitle: Text("$_fullName"),
                   trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {},
+                  onTap: () {
+                    _navigationToAccountScreen();
+                  },
                 ),
                 Divider(),
               ],
@@ -112,12 +118,26 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Future<void> _logout() async {
     try {
+      await FacebookService.instance.signOutFacebook();
+      await GoogleService.instance.signOutGoogle();
       await _auth.signOut();
       Get.to(LoginScreen());
     } catch (error) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("$error")));
+    }
+  }
+
+  Future<void> _navigationToAccountScreen() async {
+    bool isFirebaseLogin =
+        await FirebaseAuthService.instance.isFirebaseSignIn();
+    bool isFacebookLogin = await FacebookService.instance.isFacebookSignIn();
+    bool isGoogleLogin = await GoogleService.instance.isGoogleSignIn();
+    if (isFirebaseLogin || isFacebookLogin || isGoogleLogin) {
+      Get.to(AccountScreen());
+    } else {
+      Get.to(LoginScreen());
     }
   }
 }

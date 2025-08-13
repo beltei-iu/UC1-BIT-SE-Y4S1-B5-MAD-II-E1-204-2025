@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 import 'package:mad_2_204/data/app_shared_pref.dart';
 import 'package:mad_2_204/route/app_route.dart';
 import 'package:mad_2_204/screens/main_screen.dart';
+import 'package:mad_2_204/services/facebook_service.dart';
+import 'package:mad_2_204/services/google_service.dart';
 import 'package:mad_2_204/widgets/logo_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -174,11 +177,20 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 30,
             ),
             onTap: () {
-              _signInWithFacebook();
+              FacebookService.instance.signInWithFacebook();
             },
           ),
           SizedBox(width: 4),
-          Image.asset("assets/images/google.png", width: 30, height: 30),
+          GestureDetector(
+            child: Image.asset(
+              "assets/images/google.png",
+              width: 30,
+              height: 30,
+            ),
+            onTap: () {
+              GoogleService.instance.signInWithGoogle();
+            },
+          ),
         ],
       ),
     );
@@ -192,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           TextButton(
             onPressed: () {
-              Get.off(MainScreen());
+              Get.offAll(MainScreen());
             },
             child: Text("Skip"),
           ),
@@ -242,23 +254,46 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _signInWithFacebook() async {
-    final LoginResult result = await FacebookAuth.instance.login();
-    if (result.status == LoginStatus.success) {
-      // Create a credential from the access token
-      final OAuthCredential credential = FacebookAuthProvider.credential(
-        result.accessToken!.tokenString,
+  Future<Map<String, dynamic>?> _getUserData() async {
+    if (await FacebookAuth.instance.accessToken != null) {
+      final userData = await FacebookAuth.instance.getUserData(
+        fields: "email,name,picture.width(200)",
       );
-      // Once signed in, return the UserCredential
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      print("Data Response : ${result.accessToken!.tokenString}");
-      // Navigation to MainScreen
-      Get.offAll(MainScreen());
-    } else {
-      print(result.message);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("${result.message}")));
+      print('Email: ${userData['email']}');
+      print('Profile Picture: ${userData['picture']['data']['url']}');
+      return userData;
     }
+    return null;
+  }
+
+  Future<bool> _isLoggedIn() async {
+    try {
+      final result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        // Handle success
+      } else if (result.status == LoginStatus.cancelled) {
+        throw 'Login cancelled by user';
+      } else if (result.status == LoginStatus.failed) {
+        throw 'Login failed: ${result.message}';
+      }
+    } on FirebaseAuthException catch (e) {
+      print('Firebase error: ${e.code} - ${e.message}');
+    } catch (e) {
+      print('General error: $e');
+    }
+
+    final token = await FacebookAuth.instance.accessToken;
+    return token != null;
+  }
+
+  Future<void> _getFriends() async {
+    final token = await FacebookAuth.instance.accessToken;
+    final response = await http.get(
+      Uri.parse(
+        'https://graph.facebook.com/v12.0/me/friends?access_token=${token!.tokenString}',
+      ),
+    );
+    print('Friends: ${response.body}');
   }
 }
