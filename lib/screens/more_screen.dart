@@ -86,31 +86,6 @@ class _MoreScreenState extends State<MoreScreen> {
               ],
             ),
           ),
-          _isNotLogin
-              ? Container()
-              : Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: SizedBox(
-                  height: 40,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigoAccent,
-                    ),
-                    onPressed: () {
-                      _logout();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Logout", style: TextStyle(color: Colors.white)),
-                        SizedBox(width: 4),
-                        Icon(Icons.logout, color: Colors.white),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
         ],
       ),
     );
@@ -132,9 +107,7 @@ class _MoreScreenState extends State<MoreScreen> {
   Future<void> _navigationToAccountScreen() async {
     bool isFirebaseLogin =
         await FirebaseAuthService.instance.isFirebaseSignIn();
-    bool isFacebookLogin = await FacebookService.instance.isFacebookSignIn();
-    bool isGoogleLogin = await GoogleService.instance.isGoogleSignIn();
-    if (isFirebaseLogin || isFacebookLogin || isGoogleLogin) {
+    if (isFirebaseLogin) {
       Get.to(AccountScreen());
     } else {
       Get.to(LoginScreen());

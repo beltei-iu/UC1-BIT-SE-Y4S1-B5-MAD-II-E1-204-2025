@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadUser() async {
     final User? user = await _auth.currentUser;
     setState(() {
-      userName = user!.email?.split("@")[0] ?? 'Guest';
+      userName = user!.displayName ?? 'Guest';
     });
   }
 
